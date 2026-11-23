@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>خلية الجبل: سرّ الخائن | Mountain Cell: Secret of the Traitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --wood-dark: #1d110a;
+      --wood-mid: #331e12;
+      --wood-light: #4a2c1a;
+      --parchment: #f3e5c3;
+      --parchment-dark: #dfd0a8;
+      --ink: #22160e;
+      --ink-soft: #4c3728;
+      --brass: #c99e46;
+      --brass-glow: #f0cb72;
+      --crimson: #8f1d1d;
+      --crimson-bright: #b92b27;
+      --olive: #2f4f36;
+      --olive-light: #467350;
+      --navy: #1f3347;
+      --shadow-heavy: 0 14px 35px rgba(0, 0, 0, 0.72);
+      --font-display: 'Amiri', Georgia, serif;
+      --font-ui: 'Cairo', Tahoma, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: var(--font-ui);
+      background-color: #0e0906;
+      color: var(--parchment);
+      direction: rtl;
+    }
+
+    /* Vintage paper & vignette overlays */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 900;
+      opacity: 0.06;
+      background-image: radial-gradient(#ffffff 0.6px, transparent 0.6px), radial-gradient(#000000 0.6px, transparent 0.6px);
+      background-size: 18px 18px;
+      background-position: 0 0, 9px 9px;
+    }
+
+    .vignette-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 899;
+      background: radial-gradient(circle at center, transparent 48%, rgba(8, 4, 2, 0.78) 100%);
+    }
+
+    /* Screens */
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+    .screen.active {
+      display: flex;
+      animation: fadeScreen 0.55s ease forwards;
+    }
+
+    @keyframes fadeScreen {
+      from { opacity: 0; transform: scale(1.015); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ================= HOME SCREEN ================= */
+    #screen-home {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(201, 158, 70, 0.16), transparent 40%),
+        radial-gradient(circle at 80% 75%, rgba(143, 29, 29, 0.2), transparent 45%),
+        linear-gradient(160deg, #121a16 0%, #1d140e 52%, #0d0805 100%);
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 52px;
+      overflow-y: auto;
+    }
+
+    .home-bg-art {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Animated Fog Layers */
+    .fog-layer {
+      position: absolute;
+      width: 200%;
+      height: 100%;
+      top: 0;
+      right: -50%;
+      background:
+        radial-gradient(ellipse at 25% 60%, rgba(220, 210, 185, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 35%, rgba(201, 158, 70, 0.07) 0%, transparent 45%);
+      filter: blur(28px);
+      animation: driftFog 28s ease-in-out infinite alternate;
+    }
+    .fog-layer.second {
+      animation-duration: 38s;
+      animation-direction: alternate-reverse;
+      opacity: 0.7;
+    }
+    @keyframes driftFog {
+      0% { transform: translateX(-6%) translateY(0px); }
+      100% { transform: translateX(6%) translateY(-14px); }
+    }
+
+    .home-wrapper {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 660px;
+      margin: auto;
+      gap: 18px;
+    }
+
+    #game-logo {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 14px 28px 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(35, 22, 14, 0.84), rgba(20, 12, 7, 0.9));
+      border: 2px solid rgba(201, 158, 70, 0.55);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 0 28px rgba(201, 158, 70, 0.14);
+      backdrop-filter: blur(8px);
+      animation: floatLogo 4.8s ease-in-out infinite;
+    }
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    #game-logo h1 {
+      margin: 4px 0 2px;
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 4.5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(180deg, #fff1c9 0%, #d4a64a 65%, #9d7123 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+    }
+
+    #game-logo .subtitle {
+      font-size: 0.92rem;
+      color: #d6c39c;
+      letter-spacing: 1.5px;
+      opacity: 0.92;
+    }
+
+    #main-menu-content {
+      width: 100%;
+      max-width: 440px;
+      background: linear-gradient(165deg, rgba(46, 29, 18, 0.9), rgba(24, 15, 9, 0.94));
+      border: 1.5px solid rgba(201, 158, 70, 0.45);
+      border-radius: 16px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow-heavy), inset 0 0 25px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .menu-btn {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(201, 158, 70, 0.45);
+      background: linear-gradient(90deg, rgba(64, 41, 25, 0.9), rgba(38, 24, 15, 0.95));
+      color: var(--parchment);
+      font-family: var(--font-ui);
+      font-size: 1.03rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+      animation: slideInMenu 0.5s ease backwards;
+    }
+    .menu-btn:nth-child(1) { animation-delay: 0.05s; }
+    .menu-btn:nth-child(2) { animation-delay: 0.12s; }
+    .menu-btn:nth-child(3) { animation-delay: 0.19s; }
+    .menu-btn:nth-child(4) { animation-delay: 0.26s; }
+    .menu-btn:nth-child(5) { animation-delay: 0.33s; }
+
+    @keyframes slideInMenu {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .menu-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -120%;
+      width: 80%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(240, 203, 114, 0.2), transparent);
+      transform: skewX(-25deg);
+      transition: right 0.55s ease;
+    }
+    .menu-btn:hover::before {
+      right: 130%;
+    }
+    .menu-btn:hover {
+      transform: translateY(-2px) scale(1.015);
+      border-color: var(--brass-glow);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6), 0 0 14px rgba(201, 158, 70, 0.28);
+    }
+    .menu-btn.primary {
+      background: linear-gradient(90deg, #7e1c1c, #591212);
+      border-color: #d6a94e;
+      font-size: 1.12rem;
+    }
+    .menu-btn.primary:hover {
+      background: linear-gradient(90deg, #9a2424, #6c1717);
+      box-shadow: 0 10px 26px rgba(143, 29, 29, 0.55);
+    }
+
+    .difficulty-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      background: rgba(15, 9, 5, 0.55);
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px dashed rgba(201, 158, 70, 0.35);
+    }
+    .difficulty-label {
+      font-size: 0.86rem;
+      color: #d7c39a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .diff-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+    .diff-btn {
+      padding: 7px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(201, 158, 70, 0.32);
+      background: rgba(45, 29, 18, 0.7);
+      color: #cbb894;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .diff-btn.active {
+      background: linear-gradient(180deg, var(--brass), #9c7224);
+      color: #1c1108;
+      border-color: #ffe29a;
+      box-shadow: 0 0 12px rgba(201, 158, 70, 0.45);
+    }
+
+    /* ================= GAME SCREEN (WOODEN TABLE) ================= */
+    #screen-game {
+      background-color: var(--wood-dark);
+      background-image:
+        radial-gradient(circle at 50% 45%, rgba(227, 178, 89, 0.16) 0%, rgba(44, 26, 15, 0.65) 55%, rgba(14, 8, 4, 0.96) 100%),
+        repeating-linear-gradient(92deg, rgba(255, 215, 160, 0.025) 0px, rgba(255, 215, 160, 0.025) 2px, transparent 2px, transparent 14px),
+        repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.14) 0px, rgba(0, 0, 0, 0.14) 1px, transparent 1px, transparent 28px);
+      justify-content: space-between;
+      padding-bottom: 36px; /* room for global copyright bar */
+    }
+
+    /* Voice & Narrator Bar */
+    #voice-chat-bar {
+      position: relative;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 14px;
+      background: linear-gradient(180deg, rgba(24, 14, 9, 0.96), rgba(34, 20, 12, 0.92));
+      border-bottom: 1.5px solid rgba(201, 158, 70, 0.45);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+      flex-shrink: 0;
+    }
+
+    .bar-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(201, 158, 70, 0.45);
+      background: rgba(58, 36, 22, 0.85);
+      color: var(--parchment);
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .icon-btn:hover {
+      border-color: var(--brass-glow);
+      background: rgba(84, 52, 32, 0.95);
+    }
+    .icon-btn.active {
+      background: linear-gradient(180deg, #2d6639, #1d4626);
+      border-color: #7ee392;
+      color: #efffef;
+    }
+    .icon-btn.muted {
+      background: linear-gradient(180deg, #691d1d, #481212);
+      border-color: #e87a7a;
+    }
+
+    #narrator {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(17, 10, 6, 0.72);
+      border: 1px solid rgba(201, 158, 70, 0.3);
+      border-radius: 10px;
+      padding: 5px 12px;
+      min-height: 36px;
+      overflow: hidden;
+    }
+    .narrator-badge {
+      background: var(--brass);
+      color: #1f1309;
+      font-size: 0.74rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .narrator-badge.speaking {
+      animation: pulseGold 1s infinite;
+    }
+    @keyframes pulseGold {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(240, 203, 114, 0.7); }
+      50% { box-shadow: 0 0 0 6px rgba(240, 203, 114, 0); }
+    }
+    #narrator-text {
+      font-size: 0.88rem;
+      color: #f6e7c3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Table Main Arena */
+    .table-arena {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 8px 14px 4px;
+      min-height: 0;
+    }
+
+    /* Secret Map Watermark in center of table */
+    .table-map-bg {
+      position: absolute;
+      inset: 8% 12%;
+      pointer-events: none;
+      opacity: 0.16;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bots Row (#bot-hands) */
+    #bot-hands {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .bot-seat {
+      position: relative;
+      background: linear-gradient(160deg, rgba(35, 22, 14, 0.9), rgba(20, 12, 8, 0.92));
+      border: 1.5px solid rgba(201, 158, 70, 0.35);
+      border-radius: 12px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .bot-seat.current-turn {
+      border-color: var(--brass-glow);
+      box-shadow: 0 0 22px rgba(240, 203, 114, 0.35), 0 8px 20px rgba(0, 0, 0, 0.65);
+      transform: translateY(2px);
+    }
+    .bot-seat.eliminated {
+      opacity: 0.45;
+      filter: grayscale(0.8);
+    }
+
+    .bot-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .bot-identity {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .bot-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #2f1f14;
+      border: 1.5px solid var(--brass);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: var(--brass-glow);
+      flex-shrink: 0;
+    }
+    .bot-name {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--parchment);
+    }
+    .bot-status {
+      font-size: 0.74rem;
+      padding: 2px 7px;
+      border-radius: 12px;
+      background: rgba(201, 158, 70, 0.16);
+      color: #e4c98c;
+      white-space: nowrap;
+    }
+    .bot-status.thinking {
+      background: rgba(240, 203, 114, 0.26);
+      color: #fff2c6;
+      animation: blinkThink 1s infinite;
+    }
+    .bot-status.shielded {
+      background: rgba(68, 138, 89, 0.35);
+      color: #a9f0bc;
+      border: 1px solid #6bd186;
+    }
+    @keyframes blinkThink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+
+    .bot-cards-fan {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .mini-backs {
+      display: flex;
+      align-items: center;
+      padding-right: 4px;
+    }
+    .mini-card-back {
+      width: 24px;
+      height: 34px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #5e1818, #2b0b0b);
+      border: 1px solid #d5ab54;
+      margin-left: -10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: #d5ab54;
+    }
+    .bot-card-count {
+      font-size: 0.8rem;
+      color: #cbb58d;
+      font-weight: 700;
+    }
+
+    .bot-speech-bubble {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 10px;
+      left: 10px;
+      z-index: 25;
+      background: var(--parchment);
+      color: var(--ink);
+      font-size: 0.79rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1.5px solid #6b4826;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+    .bot-speech-bubble.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Center Table (Draw Pile + Discard Pile + Info) */
+    .table-center {
+      position: relative;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin: 6px auto;
+      flex-wrap: wrap;
+    }
+
+    .pile-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .pile-label {
+      font-size: 0.78rem;
+      color: #d8c399;
+      font-weight: 700;
+      text-shadow: 0 2px 4px #000;
+    }
+
+    .draw-pile {
+      width: 96px;
+      height: 138px;
+      border-radius: 11px;
+      background: linear-gradient(145deg, #6b1d1d, #310c0c);
+      border: 2.5px solid var(--brass);
+      box-shadow: -3px 3px 0 #4d1414, -6px 6px 0 #2b0a0a, 0 12px 26px rgba(0, 0, 0, 0.72);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .draw-pile:hover {
+      transform: translateY(-4px);
+      box-shadow: -3px 3px 0 #4d1414, -6px 6px 0 #2b0a0a, 0 16px 32px rgba(201, 158, 70, 0.35);
+    }
+
+    .discard-dropzone {
+      width: 108px;
+      height: 148px;
+      border-radius: 13px;
+      border: 2px dashed rgba(201, 158, 70, 0.45);
+      background: rgba(15, 9, 5, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    }
+    .discard-dropzone.drag-over {
+      border-color: var(--brass-glow);
+      background: rgba(201, 158, 70, 0.18);
+      transform: scale(1.05);
+    }
+
+    .round-hud {
+      background: linear-gradient(160deg, rgba(33, 21, 13, 0.9), rgba(18, 11, 7, 0.92));
+      border: 1.5px solid rgba(201, 158, 70, 0.42);
+      border-radius: 12px;
+      padding: 10px 14px;
+      min-width: 185px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55);
+    }
+    .hud-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      gap: 10px;
+    }
+    .hud-val {
+      font-weight: 800;
+      color: var(--brass-glow);
+    }
+
+    /* Vintage Playing Card Design */
+    .game-card {
+      position: relative;
+      width: 98px;
+      height: 140px;
+      border-radius: 10px;
+      background: linear-gradient(165deg, #f8eed4 0%, #e7d4a8 100%);
+      border: 2px solid #593b1f;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6), inset 0 0 14px rgba(139, 98, 49, 0.24);
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6px;
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      flex-shrink: 0;
+    }
+    .game-card::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(92, 61, 30, 0.35);
+      border-radius: 7px;
+      pointer-events: none;
+    }
+    .game-card.suit-mountain { border-color: #2d4a34; }
+    .game-card.suit-document { border-color: #704823; }
+    .game-card.suit-cipher { border-color: #203b54; }
+    .game-card.suit-spark { border-color: #8b1e1e; }
+
+    .game-card.special-card {
+      background: linear-gradient(165deg, #fbf1d4 0%, #dfcaa0 100%);
+      border-width: 2.5px;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .card-suit-pill {
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 0.62rem;
+    }
+    .suit-mountain .card-suit-pill { background: #2d4a34; }
+    .suit-document .card-suit-pill { background: #704823; }
+    .suit-cipher .card-suit-pill { background: #203b54; }
+    .suit-spark .card-suit-pill { background: #8b1e1e; }
+
+    .card-art {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+    }
+    .card-art svg {
+      width: 56px;
+      height: 56px;
+    }
+
+    .card-title {
+      text-align: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.86rem;
+      line-height: 1.05;
+      color: #23160c;
+    }
+
+    /* Player Hand Area (#player-hand & #player-cards) */
+    #player-hand {
+      position: relative;
+      z-index: 12;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: linear-gradient(180deg, rgba(30, 18, 11, 0.82), rgba(16, 9, 5, 0.95));
+      border: 1.5px solid rgba(201, 158, 70, 0.42);
+      border-radius: 14px;
+      padding: 8px 12px 6px;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.6);
+    }
+
+    .player-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .player-role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201, 158, 70, 0.14);
+      border: 1px solid rgba(201, 158, 70, 0.45);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      cursor: pointer;
+    }
+
+    .player-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #btn-card {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1.5px solid #f0cb72;
+      background: linear-gradient(180deg, #8f1d1d, #5e1111);
+      color: #fff6dc;
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    #btn-card:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      border-color: rgba(201, 158, 70, 0.3);
+      background: #3b2619;
+    }
+    #btn-card:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(185, 43, 39, 0.5);
+    }
+
+    #player-cards {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 8px 6px 4px;
+      min-height: 156px;
+    }
+
+    #player-cards .game-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.75), 0 0 12px rgba(240, 203, 114, 0.45);
+      z-index: 4;
+    }
+    #player-cards .game-card.selected {
+      transform: translateY(-15px) scale(1.06);
+      border-color: var(--brass-glow);
+      box-shadow: 0 0 22px rgba(240, 203, 114, 0.75), 0 16px 28px rgba(0, 0, 0, 0.8);
+      z-index: 6;
+    }
+    #player-cards .game-card.playable::after {
+      content: 'متاحة';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2e6b3c;
+      color: #e8ffed;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 6px;
+      border: 1px solid #8ae09c;
+    }
+
+    /* Card Info Explanation Strip (Game Footer) */
+    .card-explain-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 10px;
+      background: rgba(12, 7, 4, 0.85);
+      border-radius: 8px;
+      border: 1px solid rgba(201, 158, 70, 0.25);
+      font-size: 0.82rem;
+      color: #e6d5af;
+    }
+
+    /* Global Copyright Footer */
+    .global-copyright {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 800;
+      text-align: center;
+      padding: 6px 12px;
+      background: rgba(10, 6, 4, 0.94);
+      border-top: 1px solid rgba(201, 158, 70, 0.32);
+      font-size: 0.78rem;
+      color: #c8b288;
+      letter-spacing: 0.3px;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 700;
+      background: rgba(8, 5, 3, 0.82);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-backdrop.open {
+      display: flex;
+      animation: fadeScreen 0.25s ease;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 560px;
+      max-height: 86vh;
+      overflow-y: auto;
+      background: linear-gradient(165deg, #2b1a10, #160d08);
+      border: 2px solid var(--brass);
+      border-radius: 16px;
+      padding: 20px 22px;
+      box-shadow: 0 24px 55px rgba(0, 0, 0, 0.85);
+      color: var(--parchment);
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(201, 158, 70, 0.35);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .modal-header h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      color: var(--brass-glow);
+    }
+    .close-modal {
+      background: rgba(143, 29, 29, 0.75);
+      border: 1px solid #e08282;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .guide-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .guide-item {
+      background: rgba(15, 9, 5, 0.6);
+      border: 1px solid rgba(201, 158, 70, 0.25);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .guide-item strong {
+      color: var(--brass-glow);
+    }
+
+    .target-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .target-btn {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--brass);
+      background: rgba(54, 34, 21, 0.85);
+      color: var(--parchment);
+      font-family: var(--font-ui);
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .target-btn:hover {
+      background: rgba(110, 32, 32, 0.85);
+      transform: translateY(-2px);
+    }
+
+    /* Countdown bar for 5-second reveal */
+    .reveal-timer-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+    .reveal-timer-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, var(--crimson-bright), var(--brass-glow));
+      transition: width 0.1s linear;
+    }
+
+    .discussion-log {
+      background: rgba(12, 7, 4, 0.72);
+      border: 1px solid rgba(201, 158, 70, 0.3);
+      border-radius: 10px;
+      padding: 10px;
+      max-height: 150px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+      font-size: 0.86rem;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(201, 158, 70, 0.25);
+    }
+
+    /* Toast notice */
+    #toast-msg {
+      position: fixed;
+      top: 56px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-14px);
+      z-index: 950;
+      background: rgba(26, 15, 9, 0.96);
+      border: 1.5px solid var(--brass-glow);
+      color: var(--parchment);
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.28s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+    }
+    #toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #bot-hands { gap: 6px; }
+      .bot-seat { padding: 6px; }
+      .bot-name { font-size: 0.8rem; }
+      .game-card { width: 82px; height: 118px; padding: 5px; }
+      .card-art svg { width: 42px; height: 42px; }
+      .card-title { font-size: 0.76rem; }
+      .draw-pile { width: 78px; height: 114px; }
+      .discard-dropzone { width: 88px; height: 124px; }
+      .round-hud { min-width: 140px; padding: 7px 10px; }
+      #player-cards { min-height: 132px; justify-content: flex-start; }
+      .icon-btn span.hide-sm { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grain-overlay"></div>
+  <div class="vignette-overlay"></div>
+  <div id="toast-msg"></div>
+
+  <!-- ================= SCREEN 1: HOME MENU ================= -->
+  <section id="screen-home" class="screen active">
+    <div class="home-bg-art">
+      <div class="fog-layer"></div>
+      <div class="fog-layer second"></div>
+      <!-- Hand-drawn Algerian Mountain & Secret Map SVG Backdrop -->
+      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;opacity:0.42;">
+        <defs>
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#17241e"/>
+            <stop offset="65%" stop-color="#221710"/>
+            <stop offset="100%" stop-color="#0d0805"/>
+          </linearGradient>
+        </defs>
+        <rect width="1440" height="900" fill="url(#skyGrad)"/>
+        <!-- Crescent Moon & Stars -->
+        <circle cx="1180" cy="145" r="42" fill="#f0cb72" opacity="0.22"/>
+        <circle cx="1196" cy="138" r="36" fill="#17241e"/>
+        <!-- Misty Aurès / Djurdjura Peaks -->
+        <path d="M0 620 L180 430 L340 540 L530 340 L720 490 L910 310 L1120 470 L1300 360 L1440 480 L1440 900 L0 900 Z" fill="#18231b" stroke="#c99e46" stroke-opacity="0.25" stroke-width="2"/>
+        <path d="M0 710 L240 530 L430 640 L650 470 L860 610 L1080 450 L1270 590 L1440 510 L1440 900 L0 900 Z" fill="#14110e" stroke="#c99e46" stroke-opacity="0.18" stroke-width="1.5"/>
+        <!-- Vintage Secret Map Contour & Dashed Trail -->
+        <path d="M120 790 Q350 690 520 750 T940 680 T1320 770" fill="none" stroke="#c99e46" stroke-width="2.5" stroke-dasharray="10 9" opacity="0.45"/>
+        <circle cx="520" cy="750" r="9" fill="#8f1d1d" stroke="#f0cb72" stroke-width="2"/>
+        <circle cx="940" cy="680" r="11" fill="none" stroke="#f0cb72" stroke-width="2" stroke-dasharray="4 3"/>
+        <!-- Compass Rose Sketch -->
+        <g transform="translate(210, 210)" opacity="0.32" stroke="#c99e46" fill="none">
+          <circle cx="0" cy="0" r="68" stroke-width="1.5"/>
+          <circle cx="0" cy="0" r="54" stroke-dasharray="5 5"/>
+          <path d="M0 -78 L12 -12 L78 0 L12 12 L0 78 L-12 12 L-78 0 L-12 -12 Z" fill="#c99e46" fill-opacity="0.15"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="home-wrapper">
+      <!-- Hand-drawn Emblem Logo (#game-logo) -->
+      <header id="game-logo">
+        <svg width="84" height="62" viewBox="0 0 120 88" fill="none">
+          <path d="M12 72 L42 24 L62 52 L82 18 L108 72 Z" fill="#2d4a34" stroke="#f0cb72" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M42 24 L50 38 L35 41 Z" fill="#f0cb72" opacity="0.35"/>
+          <path d="M82 18 L90 34 L73 36 Z" fill="#f0cb72" opacity="0.35"/>
+          <circle cx="60" cy="48" r="22" stroke="#8f1d1d" stroke-width="2.5" stroke-dasharray="6 4"/>
+          <path d="M22 76 H98" stroke="#c99e46" stroke-width="3" stroke-linecap="round"/>
+          <!-- Eye / Magnifier Emblem -->
+          <path d="M46 48 Q60 36 74 48 Q60 60 46 48 Z" fill="#f3e5c3" stroke="#22160e" stroke-width="2"/>
+          <circle cx="60" cy="48" r="5" fill="#8f1d1d"/>
+        </svg>
+        <h1>خلية الجبل: سرّ الخائن</h1>
+        <div class="subtitle">وثائق سرية • استنتاج اجتماعي • ثورة الجبال</div>
+      </header>
+
+      <!-- Main Menu (#main-menu-content) -->
+      <nav id="main-menu-content">
+        <button class="menu-btn primary" id="btn-start-game">
+          <span>بدء لعبة جديدة</span>
+          <span>⚔️</span>
+        </button>
+
+        <div class="difficulty-bar">
+          <div class="difficulty-label">
+            <span>اللعب ضد الروبوتات (مستوى الذكاء):</span>
+            <strong id="diff-label-val" style="color:var(--brass-glow);">متوسط</strong>
+          </div>
+          <div class="diff-options">
+            <button class="diff-btn" data-diff="easy">سهل</button>
+            <button class="diff-btn active" data-diff="medium">متوسط</button>
+            <button class="diff-btn" data-diff="hard">صعب</button>
+          </div>
+        </div>
+
+        <button class="menu-btn" id="btn-open-guide">
+          <span>دليل اللعب وقوانين البطاقات</span>
+          <span>📜</span>
+        </button>
+
+        <button class="menu-btn" id="btn-open-settings">
+          <span>إعدادات الصوت والراوي</span>
+          <span>🎙️</span>
+        </button>
+
+        <button class="menu-btn" id="btn-open-about">
+          <span>حول اللعبة</span>
+          <span>🏔️</span>
+        </button>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 2: GAME ARENA ================= -->
+  <section id="screen-game" class="screen">
+    <!-- Voice & Narrator Bar (#voice-chat-bar) -->
+    <header id="voice-chat-bar">
+      <div class="bar-group">
+        <button class="icon-btn" id="btn-back-home" title="القائمة الرئيسية">
+          🏠 <span class="hide-sm">القائمة</span>
+        </button>
+        <button class="icon-btn" id="btn-mic-toggle" title="تفعيل/كتم الميكروفون">
+          🎙️ <span class="hide-sm">الميكروفون</span>
+        </button>
+        <button class="icon-btn active" id="btn-speaker-toggle" title="مكبر الصوت والراوي">
+          🔊 <span class="hide-sm">الصوت</span>
+        </button>
+      </div>
+
+      <!-- Narrator (#narrator) -->
+      <div id="narrator">
+        <span class="narrator-badge" id="narrator-badge">الراوي</span>
+        <span id="narrator-text">مرحباً بكم في خلية الجبل... جهّزوا أوراقكم!</span>
+      </div>
+
+      <div class="bar-group">
+        <button class="icon-btn" id="btn-game-guide" title="قوانين سريعة">
+          📜 <span class="hide-sm">الدليل</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="table-arena">
+      <!-- Vintage Map Watermark -->
+      <div class="table-map-bg">
+        <svg viewBox="0 0 600 320" width="600" height="320" fill="none">
+          <rect x="10" y="10" width="580" height="300" rx="18" stroke="#f0cb72" stroke-width="2" stroke-dasharray="10 6"/>
+          <path d="M40 240 Q170 110 290 190 T550 80" stroke="#f0cb72" stroke-width="2" stroke-dasharray="8 8"/>
+          <path d="M80 90 L130 45 L175 95 L220 40 L265 100" stroke="#f0cb72" stroke-width="2"/>
+          <circle cx="290" cy="190" r="24" stroke="#f0cb72" stroke-width="2"/>
+          <text x="300" y="290" fill="#f0cb72" font-size="18" text-anchor="middle" font-family="Amiri">خريطة قطاع الجبل السري - 1957</text>
+        </svg>
+      </div>
+
+      <!-- Bot Hands (#bot-hands) -->
+      <section id="bot-hands"></section>
+
+      <!-- Center Table: Draw, Discard, Round HUD -->
+      <section class="table-center">
+        <div class="pile-box">
+          <div class="draw-pile" id="draw-pile" title="اضغط لسحب بطاقة من الكومة">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none">
+              <path d="M10 44 L26 16 L36 32 L46 14 L54 44 Z" fill="#c99e46" opacity="0.85"/>
+              <circle cx="30" cy="30" r="24" stroke="#f0cb72" stroke-width="2" stroke-dasharray="5 4"/>
+            </svg>
+            <span style="font-size:0.78rem;font-weight:800;color:#f4dfaa;">سحب (<span id="deck-count">0</span>)</span>
+          </div>
+          <span class="pile-label">كومة السحب</span>
+        </div>
+
+        <div class="pile-box">
+          <div class="discard-dropzone" id="discard-dropzone" title="اسحب بطاقتك هنا للعبها">
+            <div id="top-discard-slot"></div>
+          </div>
+          <span class="pile-label">البطاقة المكشوفة</span>
+        </div>
+
+        <div class="round-hud">
+          <div class="hud-row">
+            <span>المرحلة:</span>
+            <span class="hud-val" id="hud-phase">التوزيع</span>
+          </div>
+          <div class="hud-row">
+            <span>الدور الحالي:</span>
+            <span class="hud-val" id="hud-turn">—</span>
+          </div>
+          <div class="hud-row">
+            <span>دورة النقاش بعد:</span>
+            <span class="hud-val" id="hud-discuss-counter">8 أدوار</span>
+          </div>
+          <div class="hud-row">
+            <span>الصعوبة:</span>
+            <span class="hud-val" id="hud-diff">متوسط</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Human Player Hand (#player-hand & #player-cards) -->
+      <section id="player-hand">
+        <div class="player-meta-row">
+          <div class="player-role-badge" id="player-role-badge" title="اضغط لمعاينة دورك السري">
+            <span>🎭 دورك السري:</span>
+            <strong id="player-role-name" style="color:var(--brass-glow);">—</strong>
+            <span id="player-shield-tag" style="display:none;color:#89f0a2;font-weight:800;">🛡️ محمي</span>
+          </div>
+
+          <div class="player-actions-row">
+            <button id="btn-card" disabled>العب البطاقة المختارة</button>
+          </div>
+        </div>
+
+        <div id="player-cards"></div>
+
+        <!-- Card Audio + Text Explanation Footer -->
+        <div class="card-explain-footer">
+          <span id="card-explain-text">💡 انقر على أي بطاقة لسماع وقراءة شرح دورها، أو اسحبها إلى الوسط للعبها.</span>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <!-- ================= MODALS ================= -->
+  <!-- Guide Modal -->
+  <div class="modal-backdrop" id="modal-guide">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>📜 دليل اللعب: خلية الجبل</h2>
+        <button class="close-modal" data-close="modal-guide">✕</button>
+      </div>
+      <div class="guide-grid">
+        <div class="guide-item">
+          <strong>الهدف والفِرَق:</strong>
+          يُوزّع 4 أدوار سرية: <strong>مجاهد</strong>، <strong>فدائي</strong>، <strong>مخبر</strong> (فريق الثوار) ضد <strong>خائن</strong> واحد!
+          هدف الثوار هو كشف الخائن والتصويت لإقصائه في مرحلة النقاش (أو إنهاء أوراقهم وكشفه). هدف الخائن هو النجاة من التصويت أو إفراغ يده أولاً.
+        </div>
+        <div class="guide-item">
+          <strong>نظام البطاقات (أونو-ستايل):</strong>
+          ابدأ بـ 5 بطاقات. العب بطاقة تطابق <strong>الرمز/اللون</strong> أو <strong>الرقم</strong> للبطاقة المكشوفة، أو استخدم البطاقات التكتيكية الخاصة في أي دور! إذا لم تملك بطاقة مناسبة، اسحب من الكومة.
+        </div>
+        <div class="guide-item">
+          <strong>⚔️ بطاقة هجوم (+2):</strong> عند لعبها على الخائن أو من الخائن (أو ضد أي خصم مستهدف)، تجبره على سحب بطاقتين من الكومة ما لم يكن محمياً بدرع!
+        </div>
+        <div class="guide-item">
+          <strong>👁️ بطاقة كشف دور (عين):</strong> تتيح لك اختيار لاعب للكشف عن دوره السري لك أنت فقط لمدة 5 ثوانٍ!
+        </div>
+        <div class="guide-item">
+          <strong>🔄 بطاقة تبديل دور (سهمين):</strong> تجبر لاعبين عشوائيين على تبادل أوراقهما المتبقية في اليد فوراً.
+        </div>
+        <div class="guide-item">
+          <strong>🛡️ بطاقة دفاع (درع):</strong> تحميك من تأثير بطاقات الهجوم أو الكشف لدور واحد كامل.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="modal-settings">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🎙️ إعدادات الصوت والراوي</h2>
+        <button class="close-modal" data-close="modal-settings">✕</button>
+      </div>
+      <div class="setting-row">
+        <span>تفعيل صوت الراوي والروبوتات (عربي)</span>
+        <input type="checkbox" id="opt-voice" checked style="width:20px;height:20px;accent-color:var(--brass);" />
+      </div>
+      <div class="setting-row">
+        <span>تفعيل المؤثرات الصوتية للبطاقات</span>
+        <input type="checkbox" id="opt-sfx" checked style="width:20px;height:20px;accent-color:var(--brass);" />
+      </div>
+      <div class="setting-row">
+        <span>سرعة نطق الراوي</span>
+        <input type="range" id="opt-rate" min="0.8" max="1.3" step="0.05" value="1.0" style="accent-color:var(--brass);" />
+      </div>
+      <div style="margin-top:14px;text-align:left;">
+        <button class="menu-btn primary" id="btn-test-voice" style="justify-content:center;">تجربة صوت الراوي 🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="modal-backdrop" id="modal-about">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🏔️ حول لعبة خلية الجبل</h2>
+        <button class="close-modal" data-close="modal-about">✕</button>
+      </div>
+      <p style="line-height:1.75;font-size:0.95rem;color:#ead9b3;">
+        <strong>خلية الجبل: سرّ الخائن</strong> هي لعبة استنتاج اجتماعي وتكتيك بالبطاقات مستوحاة من أجواء الثورة الجزائرية،
+        حيث تجتمع الشيفرات السرية وخرائط الجبال والشكوك حول طاولة واحدة. اجمع الدلائل من هجمات اللاعبين،
+        احمِ هويتك، وافضح الخائن قبل فوات الأوان!
+      </p>
+      <p style="color:var(--brass-glow);font-weight:700;margin-top:12px;">
+        تصميم وبرمجة: تامر إرد © 2026
+      </p>
+    </div>
+  </div>
+
+  <!-- Target Selection Modal (for Attack or Reveal) -->
+  <div class="modal-backdrop" id="modal-target">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="target-modal-title">اختر اللاعب المستهدف</h2>
+      </div>
+      <p id="target-modal-desc" style="font-size:0.92rem;color:#dfd0a8;"></p>
+      <div class="target-grid" id="target-modal-list"></div>
+    </div>
+  </div>
+
+  <!-- 5-Second Secret Role Reveal Modal -->
+  <div class="modal-backdrop" id="modal-reveal">
+    <div class="modal-card" style="text-align:center;">
+      <div class="modal-header" style="justify-content:center;">
+        <h2>👁️ وثيقة سرية مكشوفة لك فقط</h2>
+      </div>
+      <div id="reveal-role-content" style="padding:10px 0;"></div>
+      <div style="font-size:0.86rem;color:#d6c39c;">تُغلق الوثيقة تلقائياً خلال <strong id="reveal-seconds">5</strong> ثوانٍ...</div>
+      <div class="reveal-timer-track"><div class="reveal-timer-fill" id="reveal-timer-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Discussion & Voting Modal -->
+  <div class="modal-backdrop" id="modal-discussion">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>⚖️ دور النقاش: ابحثوا عن الخائن</h2>
+      </div>
+      <div class="discussion-log" id="discussion-log"></div>
+      <p style="font-size:0.88rem;color:#e6d5af;margin:6px 0;">صوّت لإقصاء اللاعب الذي تشك أنه <strong>الخائن</strong>:</p>
+      <div class="target-grid" id="vote-list"></div>
+    </div>
+  </div>
+
+  <!-- End Game Result Modal -->
+  <div class="modal-backdrop" id="modal-result">
+    <div class="modal-card" style="text-align:center;">
+      <div class="modal-header" style="justify-content:center;">
+        <h2 id="result-title">انتهت المهمة</h2>
+      </div>
+      <p id="result-desc" style="font-size:1rem;line-height:1.7;color:#f3e5c3;"></p>
+      <div id="result-roles-summary" style="text-align:right;background:rgba(12,7,4,0.65);padding:12px;border-radius:10px;border:1px solid rgba(201,158,70,0.3);margin:12px 0;font-size:0.88rem;"></div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
+        <button class="menu-btn primary" id="btn-play-again" style="justify-content:center;max-width:180px;">لعب جولة جديدة</button>
+        <button class="menu-btn" id="btn-result-home" style="justify-content:center;max-width:160px;">القائمة الرئيسية</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Copyright Footer -->
+  <footer class="global-copyright">
+    تامر إرد © 2026 - جميع الحقوق محفوظة - خلية الجبل: سرّ الخائن
+  </footer>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* ===========================================================
+         1. SECURITY & INTERFACE PROTECTION
+         =========================================================== */
+      const toastEl = document.getElementById('toast-msg');
+      let toastTimer = null;
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2600);
+      }
+
+      document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        showToast('🔒 الحماية مفعّلة: النقر بالزر الأيمن معطل.');
+      });
+
+      document.addEventListener('keydown', (e) => {
+        const key = e.key.toUpperCase();
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(key)) ||
+          (e.ctrlKey && key === 'U') ||
+          (e.metaKey && e.altKey && ['I', 'J', 'C'].includes(key))
+        ) {
+          e.preventDefault();
+          showToast('🔒 اختصارات الفحص معطلة لحماية وثائق الخلية.');
+        }
+      });
+
+      /* ===========================================================
+         2. AUDIO & WEB SPEECH API NARRATOR ENGINE
+         =========================================================== */
+      const AudioEngine = {
+        ctx: null,
+        voiceEnabled: true,
+        sfxEnabled: true,
+        rate: 1.0,
+        micActive: false,
+        recognition: null,
+        arabicVoice: null,
+
+        initCtx() {
+          if (!this.ctx) {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) this.ctx = new AC();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume().catch(() => {});
+          }
+        },
+
+        loadVoices() {
+          if (!('speechSynthesis' in window)) return;
+          const voices = window.speechSynthesis.getVoices();
+          if (!voices.length) return;
+          // Prefer Google Arabic or any Arabic voice
+          this.arabicVoice =
+            voices.find(v => v.lang.startsWith('ar') && v.name.toLowerCase().includes('google')) ||
+            voices.find(v => v.lang.startsWith('ar')) ||
+            null;
+        },
+
+        speak(text, { pitch = 1.0, rate = this.rate, isNarrator = true } = {}) {
+          if (isNarrator) {
+            const nText = document.getElementById('narrator-text');
+            const nBadge = document.getElementById('narrator-badge');
+            if (nText) nText.textContent = text;
+            if (nBadge) {
+              nBadge.classList.add('speaking');
+              setTimeout(() => nBadge.classList.remove('speaking'), 2400);
+            }
+          }
+          if (!this.voiceEnabled || !('speechSynthesis' in window)) return;
+
+          try {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ar-DZ';
+            if (this.arabicVoice) utter.voice = this.arabicVoice;
+            utter.pitch = pitch;
+            utter.rate = rate;
+            utter.volume = 1.0;
+            window.speechSynthesis.speak(utter);
+          } catch (_) {}
+        },
+
+        playTone(freq = 440, duration = 0.12, type = 'triangle', gainVal = 0.1) {
+          if (!this.sfxEnabled) return;
+          this.initCtx();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        },
+
+        sfxCard() { this.playTone(320, 0.09, 'triangle', 0.11); setTimeout(() => this.playTone(480, 0.08, 'sine', 0.08), 45); },
+        sfxAttack() { this.playTone(150, 0.22, 'sawtooth', 0.14); setTimeout(() => this.playTone(105, 0.25, 'square', 0.12), 80); },
+        sfxShield() { this.playTone(540, 0.16, 'sine', 0.11); setTimeout(() => this.playTone(720, 0.22, 'triangle', 0.1), 80); },
+        sfxReveal() { this.playTone(390, 0.18, 'sine', 0.1); setTimeout(() => this.playTone(620, 0.26, 'sine', 0.11), 110); },
+        sfxSwap() { this.playTone(420, 0.1, 'triangle', 0.1); setTimeout(() => this.playTone(310, 0.12, 'triangle', 0.1), 90); }
+      };
+
+      if ('speechSynthesis' in window) {
+        AudioEngine.loadVoices();
+        window.speechSynthesis.onvoiceschanged = () => AudioEngine.loadVoices();
+      }
+
+      /* ===========================================================
+         3. HAND-DRAWN VINTAGE SVG ART FACTORY
+         =========================================================== */
+      const SUITS = {
+        mountain: { name: 'الجبل', color: '#2d4a34' },
+        document: { name: 'الوثيقة', color: '#704823' },
+        cipher:   { name: 'الشيفرة', color: '#203b54' },
+        spark:    { name: 'الشرارة', color: '#8b1e1e' }
+      };
+
+      const ROLES = {
+        mujahid: {
+          key: 'mujahid',
+          title: 'مجاهد',
+          team: 'الثوار',
+          desc: 'حامي الخلية الجبلية. هدفك كشف الخائن والتصويت لإقصائه.',
+          color: '#2d4a34'
+        },
+        fedayi: {
+          key: 'fedayi',
+          title: 'فدائي',
+          team: 'الثوار',
+          desc: 'مقاتل شجاع في الصفوف الأمامية. تعاون مع الثوار لإفشال مخطط الخائن.',
+          color: '#203b54'
+        },
+        informant: {
+          key: 'informant',
+          title: 'مخبر',
+          team: 'الثوار',
+          desc: 'عين الخلية السرية على التحركات المشبوهة. ساعد الثوار رغم الشكوك حولك.',
+          color: '#704823'
+        },
+        traitor: {
+          key: 'traitor',
+          title: 'خائن',
+          team: 'الخيانة',
+          desc: 'العميل المتسلل! ضلّل الآخرين، اهرب من التصويت، أو تخلص من أوراقك أولاً.',
+          color: '#8f1d1d'
+        }
+      };
+
+      function getCardSVG(card) {
+        if (card.type === 'attack') {
+          return `<svg viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="26" fill="#8f1d1d" fill-opacity="0.14" stroke="#8f1d1d" stroke-width="2" stroke-dasharray="4 3"/>
+            <path d="M16 48 L48 16 M48 16 L36 16 M48 16 L48 28" stroke="#8f1d1d" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 18 L46 46" stroke="#23160c" stroke-width="3" stroke-linecap="round"/>
+            <text x="32" y="57" text-anchor="middle" font-size="13" font-weight="900" fill="#8f1d1d">+2</text>
+          </svg>`;
+        }
+        if (card.type === 'reveal') {
+          return `<svg viewBox="0 0 64 64" fill="none">
+            <path d="M8 32 Q32 10 56 32 Q32 54 8 32 Z" fill="#f9f2df" stroke="#203b54" stroke-width="2.8"/>
+            <circle cx="32" cy="32" r="10" fill="#203b54"/>
+            <circle cx="32" cy="32" r="4" fill="#f0cb72"/>
+            <path d="M32 6 V12 M32 52 V58" stroke="#c99e46" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>`;
+        }
+        if (card.type === 'swap') {
+          return `<svg viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="24" stroke="#704823" stroke-width="2" stroke-dasharray="5 3"/>
+            <path d="M18 24 H46 L38 16 M46 40 H18 L26 48" stroke="#704823" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>`;
+        }
+        if (card.type === 'defense') {
+          return `<svg viewBox="0 0 64 64" fill="none">
+            <path d="M32 8 L52 16 V31 C52 44 43 52 32 57 C21 52 12 44 12 31 V16 Z" fill="#2d4a34" fill-opacity="0.2" stroke="#2d4a34" stroke-width="3"/>
+            <path d="M32 18 V45 M22 30 H42" stroke="#2d4a34" stroke-width="3" stroke-linecap="round"/>
+          </svg>`;
+        }
+        // Normal suited vintage icons
+        if (card.suit === 'mountain') {
+          return `<svg viewBox="0 0 64 64" fill="none">
+            <path d="M8 50 L26 18 L38 36 L47 22 L58 50 Z" fill="#2d4a34" fill-opacity="0.28" stroke="#2d4a34" stroke-width="2.6" stroke-linejoin="round"/>
+            <path d="M26 18 L31 28 L21 29 Z" fill="#2d4a34"/>
+          </svg>`;
+        }
+        if (card.suit === 'document') {
+          return `<svg viewBox="0 0 64 64" fill="none">
+            <rect x="16" y="10" width="32" height="44" rx="3" fill="#fff7e2" stroke="#704823" stroke-width="2.5"/>
+            <path d="M22 21 H42 M22 29 H42 M22 37 H34" stroke="#704823" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="40" cy="44" r="5" fill="#8f1d1d"/>
+          </svg>`;
+        }
+        if (card.suit === 'cipher') {
+          return `<svg viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="20" stroke="#203b54" stroke-width="2.5"/>
+            <path d="M32 12 V52 M12 32 H52" stroke="#203b54" stroke-width="1.8" stroke-dasharray="4 3"/>
+            <circle cx="32" cy="32" r="6" fill="#203b54"/>
+          </svg>`;
+        }
+        return `<svg viewBox="0 0 64 64" fill="none">
+          <path d="M32 10 C40 22 48 28 44 42 C41 50 32 54 32 54 C32 54 20 48 20 36 C20 26 28 20 32 10 Z" fill="#8b1e1e" fill-opacity="0.25" stroke="#8b1e1e" stroke-width="2.6"/>
+          <path d="M32 28 C36 34 36 42 32 47 C28 42 28 34 32 28 Z" fill="#8b1e1e"/>
+        </svg>`;
+      }
+
+      function getRoleSVG(roleKey) {
+        const col = ROLES[roleKey]?.color || '#c99e46';
+        return `<svg width="68" height="68" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="36" fill="${col}" fill-opacity="0.22" stroke="#f0cb72" stroke-width="2.5"/>
+          <circle cx="40" cy="30" r="12" fill="#f3e5c3" stroke="#22160e" stroke-width="2"/>
+          <path d="M18 64 C20 48 60 48 62 64" fill="${col}" stroke="#f0cb72" stroke-width="2"/>
+        </svg>`;
+      }
+
+      /* ===========================================================
+         4. GAME STATE & CORE ENGINE
+         =========================================================== */
+      const BOT_PROFILES = [
+        { id: 1, name: 'سي قاسي', avatar: 'ق', pitch: 0.85, lines: {
+          attack: 'هاك +2 يا خويا، الجبل ما يرحمش المشبوهين!',
+          reveal: 'خليني نشوف واش مخبي في وثائقك السرية.',
+          swap: 'نخلطو الأوراق باش ينكشف المستور!',
+          defense: 'درعي جاهز، ما توصلنيش سهام الغدر.',
+          normal: 'نلعب ورقتي بهدوء... والغدار باين في عينيه.'
+        }},
+        { id: 2, name: 'حسيبة', avatar: 'ح', pitch: 1.25, lines: {
+          attack: 'هجوم مباشر! تحمّل بطاقتين إضافيتين الآن.',
+          reveal: 'سأكشف سرّ أحدكم بهذه العين الساهرة.',
+          swap: 'تبديل أوراق مفاجئ، حذارِ من الارتباك!',
+          defense: 'أحمي موقعي في الخلية لدور كامل.',
+          normal: 'كل خطوة محسوبة... من يتسلل في الظلام؟'
+        }},
+        { id: 3, name: 'رشيد', avatar: 'ر', pitch: 0.96, lines: {
+          attack: 'ضربة تكتيكية! اسحب بطاقتين يا بطل.',
+          reveal: 'المخبر لا ينام، سأطّلع على ملفك السري.',
+          swap: 'تبديل عشوائي للوثائق، ليكن الله في عونكم!',
+          defense: 'تحصين دفاعي، لن تخترقوا خطتي.',
+          normal: 'ورقة عادية، لكن عيني على الخائن.'
+        }}
+      ];
+
+      const Game = {
+        difficulty: 'medium',
+        players: [],
+        deck: [],
+        discardPile: [],
+        currentTurnIdx: 0,
+        selectedCardId: null,
+        turnsUntilDiscussion: 8,
+        phase: 'idle', // 'dealing', 'playing', 'discussion', 'ended'
+        suspicions: {}, // bot memory
+        discussionLogs: [],
+        busy: false,
+
+        buildDeck() {
+          const cards = [];
+          let uid = 1;
+          const suitKeys = Object.keys(SUITS);
+          // Normal cards (1 to 5 in 4 suits x 2 copies = 40 cards)
+          for (let copy = 0; copy < 2; copy++) {
+            for (const suit of suitKeys) {
+              for (let val = 1; val <= 5; val++) {
+                cards.push({
+                  id: `c_${uid++}`,
+                  type: 'normal',
+                  suit,
+                  value: val,
+                  title: `${SUITS[suit].name} ${val}`,
+                  explain: `بطاقة عادية (${SUITS[suit].name} - رقم ${val}): لا تأثير خاص، تُلعب إذا طابقت الرمز أو الرقم.`
+                });
+              }
+            }
+          }
+          // Special tactical cards (Uno-style)
+          const specials = [
+            { type: 'attack', count: 5, title: 'هجوم (+2)', explain: 'بطاقة هجوم (+2): عند لعبها على الخائن أو من الخائن (أو أي خصم مستهدف)، تجبره على سحب بطاقتين من الكومة!' },
+            { type: 'reveal', count: 4, title: 'كشف دور', explain: 'بطاقة كشف دور (عين): تتيح لك اختيار لاعب للكشف عن دوره السري لك أنت فقط لمدة 5 ثوانٍ.' },
+            { type: 'swap', count: 4, title: 'تبديل دور', explain: 'بطاقة تبديل دور (سهمين): تجبر لاعبين عشوائيين على تبادل أوراقهما المتبقية في اليد.' },
+            { type: 'defense', count: 5, title: 'دفاع (درع)', explain: 'بطاقة دفاع (درع): تحميك من تأثير بطاقات الهجوم أو الكشف لدور واحد.' }
+          ];
+          for (const sp of specials) {
+            for (let i = 0; i < sp.count; i++) {
+              const suit = suitKeys[i % suitKeys.length];
+              cards.push({
+                id: `c_${uid++}`,
+                type: sp.type,
+                suit,
+                value: sp.type,
+                title: sp.title,
+                explain: sp.explain
+              });
+            }
+          }
+          return this.shuffle(cards);
+        },
+
+        shuffle(arr) {
+          const a = [...arr];
+          for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+          }
+          return a;
+        },
+
+        startNewGame() {
+          this.busy = false;
+          this.selectedCardId = null;
+          this.turnsUntilDiscussion = 8;
+          this.discussionLogs = [];
+          this.deck = this.buildDeck();
+          this.discardPile = [];
+
+          // Assign 4 roles: مجاهد، فدائي، مخبر، خائن
+          const rolePool = this.shuffle(['mujahid', 'fedayi', 'informant', 'traitor']);
+          this.players = [
+            { id: 0, name: 'أنت (القائد)', isHuman: true, role: rolePool[0], hand: [], shielded: false, eliminated: false },
+            ...BOT_PROFILES.map((bp, idx) => ({
+              id: bp.id,
+              name: bp.name,
+              avatar: bp.avatar,
+              pitch: bp.pitch,
+              lines: bp.lines,
+              isHuman: false,
+              role: rolePool[idx + 1],
+              hand: [],
+              shielded: false,
+              eliminated: false
+            }))
+          ];
+
+          this.suspicions = { 0: 0, 1: 0, 2: 0, 3: 0 };
+
+          // Deal 5 cards to each player
+          for (let r = 0; r < 5; r++) {
+            for (const p of this.players) {
+              p.hand.push(this.drawRawCard());
+            }
+          }
+
+          // Top discard must start as a normal card
+          let firstIdx = this.deck.findIndex(c => c.type === 'normal');
+          if (firstIdx === -1) firstIdx = 0;
+          const [firstCard] = this.deck.splice(firstIdx, 1);
+          this.discardPile.push(firstCard);
+
+          this.currentTurnIdx = 0;
+          this.phase = 'dealing';
+          this.renderAll();
+
+          AudioEngine.sfxCard();
+          AudioEngine.speak('مرحلة التوزيع، انظروا لأوراقكم', { isNarrator: true });
+          this.addLog('تم توزيع 5 بطاقات لكل لاعب وبدأت مهمة الخلية.');
+
+          setTimeout(() => {
+            if (this.phase === 'dealing') {
+              this.phase = 'playing';
+              this.updateHUD();
+              const cur = this.players[this.currentTurnIdx];
+              AudioEngine.speak(`دور اللاعب ${cur.name}، ماذا ستلعب؟`, { isNarrator: true });
+            }
+          }, 2600);
+        },
+
+        drawRawCard() {
+          if (this.deck.length === 0) {
+            if (this.discardPile.length > 1) {
+              const top = this.discardPile.pop();
+              this.deck = this.shuffle(this.discardPile);
+              this.discardPile = [top];
+            } else {
+              this.deck = this.buildDeck();
+            }
+          }
+          return this.deck.pop();
+        },
+
+        isCardPlayable(card) {
+          const top = this.discardPile[this.discardPile.length - 1];
+          if (!top) return true;
+          // Special tactical cards can always be played (Uno wild-tactical style)
+          if (card.type !== 'normal') return true;
+          // Normal card matches suit or number
+          return card.suit === top.suit || card.value === top.value;
+        },
+
+        selectCard(cardId) {
+          if (this.phase === 'ended') return;
+          const human = this.players[0];
+          const card = human.hand.find(c => c.id === cardId);
+          if (!card) return;
+
+          this.selectedCardId = cardId;
+          const explainEl = document.getElementById('card-explain-text');
+          explainEl.textContent = `📌 ${card.explain}`;
+
+          // Speak short audio explanation on click
+          AudioEngine.sfxCard();
+          AudioEngine.speak(card.explain, { isNarrator: false, rate: Math.min(1.25, AudioEngine.rate + 0.08) });
+
+          this.renderPlayerHand();
+        },
+
+        humanDrawCard() {
+          if (this.busy || this.phase !== 'playing') return;
+          if (this.currentTurnIdx !== 0) {
+            showToast('⏳ انتظر دورك يا قائد!');
+            return;
+          }
+          this.busy = true;
+          const human = this.players[0];
+          const newCard = this.drawRawCard();
+          human.hand.push(newCard);
+          AudioEngine.sfxCard();
+          showToast(`🃏 سحبت بطاقة: ${newCard.title}`);
+          this.addLog(`${human.name} سحب بطاقة من الكومة.`);
+          this.selectedCardId = null;
+          this.renderAll();
+          setTimeout(() => {
+            this.busy = false;
+            this.advanceTurn();
+          }, 700);
+        },
+
+        playSelectedHumanCard() {
+          if (this.busy || this.phase !== 'playing') return;
+          if (this.currentTurnIdx !== 0) {
+            showToast('⏳ ليس دورك الآن!');
+            return;
+          }
+          const human = this.players[0];
+          const card = human.hand.find(c => c.id === this.selectedCardId);
+          if (!card) {
+            showToast('👆 اختر بطاقة أولاً من يدك.');
+            return;
+          }
+          if (!this.isCardPlayable(card)) {
+            showToast('⚠️ هذه البطاقة لا تطابق الرمز أو الرقم المكشوف!');
+            return;
+          }
+          this.executeCardPlay(human, card);
+        },
+
+        executeCardPlay(player, card) {
+          this.busy = true;
+          // Remove from hand and place on discard pile
+          const idx = player.hand.findIndex(c => c.id === card.id);
+          if (idx > -1) player.hand.splice(idx, 1);
+          this.discardPile.push(card);
+          this.selectedCardId = null;
+          this.renderAll();
+
+          if (card.type === 'normal') {
+            AudioEngine.sfxCard();
+            this.addLog(`${player.name} لعب ${card.title}.`);
+            if (!player.isHuman) this.botSpeak(player, 'normal');
+            this.finishTurnAfterAction(player);
+            return;
+          }
+
+          if (card.type === 'defense') {
+            player.shielded = true;
+            AudioEngine.sfxShield();
+            this.addLog(`🛡️ ${player.name} فعّل بطاقة الدفاع (درع) لدور واحد.`);
+            if (player.isHuman) {
+              AudioEngine.speak('فعّلت درع الحماية لدور واحد.', { isNarrator: true });
+            } else {
+              this.botSpeak(player, 'defense');
+            }
+            this.renderAll();
+            this.finishTurnAfterAction(player);
+            return;
+          }
+
+          if (card.type === 'swap') {
+            AudioEngine.sfxSwap();
+            const activePlayers = this.players.filter(p => !p.eliminated);
+            if (activePlayers.length >= 2) {
+              const shuffled = this.shuffle(activePlayers);
+              const pA = shuffled[0];
+              const pB = shuffled[1];
+              const temp = pA.hand;
+              pA.hand = pB.hand;
+              pB.hand = temp;
+              const msg = `🔄 تبديل دور! تبادل ${pA.name} و ${pB.name} أوراقهما المتبقية!`;
+              this.addLog(msg);
+              showToast(msg);
+              if (!player.isHuman) this.botSpeak(player, 'swap');
+              AudioEngine.speak(`تم تبديل الأوراق بين ${pA.name} و ${pB.name}`, { isNarrator: true });
+            }
+            this.renderAll();
+            this.finishTurnAfterAction(player);
+            return;
+          }
+
+          if (card.type === 'attack') {
+            const opponents = this.players.filter(p => !p.eliminated && p.id !== player.id);
+            if (player.isHuman) {
+              this.openTargetModal('⚔️ اختر هدف بطاقة الهجوم (+2)', 'اختر لاعباً لإجباره على سحب بطاقتين (إذا كان محمياً بدرع فسيتم صد الهجوم):', opponents, (target) => {
+                this.resolveAttack(player, target);
+              });
+            } else {
+              const target = this.chooseBotTarget(player, opponents, 'attack');
+              this.botSpeak(player, 'attack');
+              setTimeout(() => this.resolveAttack(player, target), 750);
+            }
+            return;
+          }
+
+          if (card.type === 'reveal') {
+            const opponents = this.players.filter(p => !p.eliminated && p.id !== player.id);
+            if (player.isHuman) {
+              this.openTargetModal('👁️ اختر لاعباً لكشف دوره السري', 'سيُكشف دوره السري لك أنت فقط لمدة 5 ثوانٍ:', opponents, (target) => {
+                this.resolveReveal(player, target);
+              });
+            } else {
+              const target = this.chooseBotTarget(player, opponents, 'reveal');
+              this.botSpeak(player, 'reveal');
+              setTimeout(() => this.resolveReveal(player, target), 750);
+            }
+          }
+        },
+
+        resolveAttack(attacker, target) {
+          if (target.shielded) {
+            target.shielded = false;
+            AudioEngine.sfxShield();
+            const msg = `🛡️ ${target.name} صدّ هجوم ${attacker.name} بدرعه!`;
+            this.addLog(msg);
+            showToast(msg);
+            AudioEngine.speak(msg, { isNarrator: true });
+            this.renderAll();
+            this.finishTurnAfterAction(attacker);
+            return;
+          }
+
+          AudioEngine.sfxAttack();
+          // Attack (+2) logic: forces target to draw 2 cards; notes Traitor involvement if revealed later
+          target.hand.push(this.drawRawCard(), this.drawRawCard());
+          this.suspicions[attacker.id] = (this.suspicions[attacker.id] || 0) + 1;
+
+          const msg = `الروبوت ${attacker.isHuman ? 'القائد' : attacker.name} هاجم اللاعب ${target.name}`;
+          this.addLog(`⚔️ ${attacker.name} هاجم ${target.name} وأجبره على سحب بطاقتين (+2)!`);
+          showToast(`⚔️ ${target.name} سحب بطاقتين (+2)!`);
+          AudioEngine.speak(
+            attacker.isHuman ? `هاجمت اللاعب ${target.name} وسحب بطاقتين` : msg,
+            { isNarrator: true }
+          );
+
+          this.renderAll();
+          this.finishTurnAfterAction(attacker);
+        },
+
+        resolveReveal(actor, target) {
+          if (target.shielded) {
+            target.shielded = false;
+            AudioEngine.sfxShield();
+            const msg = `🛡️ درع ${target.name} منع كشف هويته السرية!`;
+            this.addLog(msg);
+            showToast(msg);
+            AudioEngine.speak(msg, { isNarrator: true });
+            this.renderAll();
+            this.finishTurnAfterAction(actor);
+            return;
+          }
+
+          AudioEngine.sfxReveal();
+          this.addLog(`👁️ ${actor.name} فحص وثيقة الهوية السرية للاعب ${target.name}.`);
+
+          if (actor.isHuman) {
+            // Show secret role for 5 seconds ONLY to human
+            const modal = document.getElementById('modal-reveal');
+            const content = document.getElementById('reveal-role-content');
+            const secEl = document.getElementById('reveal-seconds');
+            const fillEl = document.getElementById('reveal-timer-fill');
+            const rInfo = ROLES[target.role];
+
+            content.innerHTML = `
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                ${getRoleSVG(target.role)}
+                <div style="font-size:1.15rem;font-weight:800;">${target.name}</div>
+                <div style="font-size:1.45rem;font-family:var(--font-display);font-weight:700;color:var(--brass-glow);">${rInfo.title} (${rInfo.team})</div>
+                <div style="font-size:0.86rem;color:#dfcfa9;">${rInfo.desc}</div>
+              </div>
+            `;
+            modal.classList.add('open');
+
+            let msLeft = 5000;
+            fillEl.style.width = '100%';
+            secEl.textContent = '5';
+
+            const interval = setInterval(() => {
+              msLeft -= 100;
+              fillEl.style.width = `${Math.max(0, (msLeft / 5000) * 100)}%`;
+              secEl.textContent = String(Math.ceil(msLeft / 1000));
+              if (msLeft <= 0) {
+                clearInterval(interval);
+                modal.classList.remove('open');
+                this.finishTurnAfterAction(actor);
+              }
+            }, 100);
+          } else {
+            // Bot updates private suspicion memory
+            if (target.role === 'traitor') {
+              this.suspicions[target.id] = (this.suspicions[target.id] || 0) + (this.difficulty === 'hard' ? 5 : 3);
+            }
+            showToast(`👁️ ${actor.name} كشف دور ${target.name} سراً!`);
+            this.finishTurnAfterAction(actor);
+          }
+        },
+
+        finishTurnAfterAction(player) {
+          // Check if someone emptied all cards!
+          if (player.hand.length === 0) {
+            if (player.role === 'traitor') {
+              this.endGame(false, `تخلص الخائن (${player.name}) من جميع أوراقه وهرب بأسرار الخلية!`);
+              return;
+            } else {
+              // Hero emptied hand -> triggers immediate emergency discussion & vote to catch the Traitor!
+              showToast(`⚡ ${player.name} أنهى أوراقه! حان وقت التصويت لكشف الخائن!`);
+              setTimeout(() => this.startDiscussionPhase(), 900);
+              return;
+            }
+          }
+          setTimeout(() => {
+            this.busy = false;
+            this.advanceTurn();
+          }, 700);
+        },
+
+        advanceTurn() {
+          if (this.phase !== 'playing') return;
+
+          this.turnsUntilDiscussion--;
+          if (this.turnsUntilDiscussion <= 0) {
+            this.turnsUntilDiscussion = 8;
+            this.startDiscussionPhase();
+            return;
+          }
+
+          // Move to next non-eliminated player
+          let safety = 0;
+          do {
+            this.currentTurnIdx = (this.currentTurnIdx + 1) % this.players.length;
+            safety++;
+          } while (this.players[this.currentTurnIdx].eliminated && safety < 10);
+
+          const current = this.players[this.currentTurnIdx];
+          // Shield lasts for 1 turn until player's own next turn starts
+          if (current.shielded) current.shielded = false;
+
+          this.renderAll();
+
+          if (current.isHuman) {
+            AudioEngine.speak(`دور اللاعب ${current.name}، ماذا ستلعب؟`, { isNarrator: true });
+          } else {
+            this.runBotTurn(current);
+          }
+        },
+
+        runBotTurn(bot) {
+          this.busy = true;
+          const thinkTime = this.difficulty === 'easy' ? 1100 : (this.difficulty === 'medium' ? 1350 : 1550);
+          this.renderBotHands(bot.id);
+          AudioEngine.speak(`دور اللاعب ${bot.name}، ماذا ستلعب؟`, { isNarrator: true });
+
+          setTimeout(() => {
+            if (this.phase !== 'playing') return;
+            const playable = bot.hand.filter(c => this.isCardPlayable(c));
+            if (playable.length === 0) {
+              const drawn = this.drawRawCard();
+              bot.hand.push(drawn);
+              AudioEngine.sfxCard();
+              this.addLog(`${bot.name} سحب بطاقة لعدم توفر مطابقة.`);
+              this.renderAll();
+              this.busy = false;
+              this.advanceTurn();
+              return;
+            }
+
+            // AI card choice based on difficulty
+            let chosen = playable[0];
+            if (this.difficulty !== 'easy') {
+              const special = playable.find(c => c.type === 'attack' || c.type === 'reveal' || c.type === 'defense');
+              if (special && (this.difficulty === 'hard' || Math.random() < 0.7)) {
+                chosen = special;
+              }
+            } else {
+              chosen = playable[Math.floor(Math.random() * playable.length)];
+            }
+
+            this.executeCardPlay(bot, chosen);
+          }, thinkTime);
+        },
+
+        chooseBotTarget(bot, opponents, actionType) {
+          if (this.difficulty === 'easy') {
+            return opponents[Math.floor(Math.random() * opponents.length)];
+          }
+          // Traitor bot targets players with fewest cards; Loyal bot targets highest suspicion
+          if (bot.role === 'traitor') {
+            return [...opponents].sort((a, b) => a.hand.length - b.hand.length)[0];
+          }
+          return [...opponents].sort((a, b) => (this.suspicions[b.id] || 0) - (this.suspicions[a.id] || 0))[0];
+        },
+
+        botSpeak(bot, category) {
+          const text = bot.lines?.[category] || 'لعبنا الورقة.';
+          const bubble = document.getElementById(`bot-bubble-${bot.id}`);
+          if (bubble) {
+            bubble.textContent = text;
+            bubble.classList.add('show');
+            setTimeout(() => bubble.classList.remove('show'), 2800);
+          }
+          AudioEngine.speak(text, { pitch: bot.pitch, isNarrator: false });
+        },
+
+        /* ================= DISCUSSION & VOTING PHASE ================= */
+        startDiscussionPhase() {
+          this.phase = 'discussion';
+          this.busy = false;
+          this.updateHUD();
+          AudioEngine.sfxReveal();
+          AudioEngine.speak('دور النقاش، ابحثوا عن الخائن', { isNarrator: true });
+
+          const modal = document.getElementById('modal-discussion');
+          const logEl = document.getElementById('discussion-log');
+          const voteList = document.getElementById('vote-list');
+
+          // Generate bot suspicions in dialect
+          const activeBots = this.players.filter(p => !p.isHuman && !p.eliminated);
+          const suspects = this.players.filter(p => !p.eliminated);
+          const lines = [...this.discussionLogs.slice(-4)];
+
+          activeBots.forEach((bot, i) => {
+            const others = suspects.filter(s => s.id !== bot.id);
+            let target;
+            if (bot.role === 'traitor') {
+              // Traitor deflects onto an innocent
+              const innocents = others.filter(o => o.role !== 'traitor');
+              target = innocents[Math.floor(Math.random() * innocents.length)] || others[0];
+            } else if (this.difficulty === 'hard') {
+              const traitor = others.find(o => o.role === 'traitor');
+              target = (traitor && Math.random() < 0.72) ? traitor : others[Math.floor(Math.random() * others.length)];
+            } else {
+              target = others[Math.floor(Math.random() * others.length)];
+            }
+            const comment = `🗣️ ${bot.name}: "راني شاك في (${target.name})! تحركاته مشبوهة في الخلية."`;
+            lines.push(comment);
+            setTimeout(() => {
+              if (this.phase === 'discussion') {
+                AudioEngine.speak(`أشك في ${target.name}، تصرفاته مريبة`, { pitch: bot.pitch, isNarrator: false });
+              }
+            }, (i + 1) * 1400);
+          });
+
+          logEl.innerHTML = lines.map(l => `<div>${l}</div>`).join('');
+          voteList.innerHTML = '';
+
+          suspects.filter(s => !s.isHuman).forEach(p => {
+            const btn = document.createElement('button');
+            btn.className = 'target-btn';
+            btn.innerHTML = `<span>🎯 اتهام ${p.name}</span><small style="color:#d6c39c;">(${p.hand.length} أوراق)</small>`;
+            btn.onclick = () => this.resolveVote(p);
+            voteList.appendChild(btn);
+          });
+
+          const skipBtn = document.createElement('button');
+          skipBtn.className = 'target-btn';
+          skipBtn.style.borderColor = '#7d6b4d';
+          skipBtn.innerHTML = `<span>⏭️ تخطي التصويت</span><small>مواصلة اللعب</small>`;
+          skipBtn.onclick = () => this.resolveVote(null);
+          voteList.appendChild(skipBtn);
+
+          modal.classList.add('open');
+        },
+
+        resolveVote(chosenByHuman) {
+          document.getElementById('modal-discussion').classList.remove('open');
+          if (!chosenByHuman) {
+            showToast('⚖️ تم تخطي التصويت، تستمر الخلية في اللعب.');
+            this.phase = 'playing';
+            this.advanceTurn();
+            return;
+          }
+
+          chosenByHuman.eliminated = true;
+          const rInfo = ROLES[chosenByHuman.role];
+
+          if (chosenByHuman.role === 'traitor') {
+            this.endGame(true, `أحسنت يا قائد! تم التصويت وإقصاء الخائن (${chosenByHuman.name}) بنجاح وحماية أسرار الثورة!`);
+            return;
+          }
+
+          // Innocent was eliminated! Check if Traitor is among last 2 players
+          const alive = this.players.filter(p => !p.eliminated);
+          const human = this.players[0];
+          if (human.role === 'traitor' && alive.length <= 2) {
+            this.endGame(true, 'بصفتك الخائن، نجحت في خداع الخلية والسيطرة على الوثائق!');
+            return;
+          }
+          if (alive.length <= 2) {
+            const traitor = this.players.find(p => p.role === 'traitor');
+            this.endGame(false, `تم إقصاء ${chosenByHuman.name} وكان دوره (${rInfo.title})! تمكّن الخائن (${traitor.name}) من النجاة والانتصار!`);
+            return;
+          }
+
+          showToast(`💔 تم إقصاء ${chosenByHuman.name} وكان بريئاً (${rInfo.title})!`);
+          AudioEngine.speak(`للأسف، ${chosenByHuman.name} لم يكن الخائن!`, { isNarrator: true });
+          this.addLog(`⚖️ تم إقصاء ${chosenByHuman.name} (دوره: ${rInfo.title}) ولم يكن الخائن!`);
+
+          this.phase = 'playing';
+          this.renderAll();
+          this.advanceTurn();
+        },
+
+        endGame(victory, message) {
+          this.phase = 'ended';
+          this.busy = false;
+          const modal = document.getElementById('modal-result');
+          document.getElementById('result-title').textContent = victory ? '🏆 انتصار الخلية!' : '🕯️ سقوط الخلية!';
+          document.getElementById('result-desc').textContent = message;
+          document.getElementById('result-roles-summary').innerHTML =
+            '<strong>كشف جميع الأدوار السرية:</strong><br>' +
+            this.players.map(p => `• ${p.name}: <strong style="color:var(--brass-glow);">${ROLES[p.role].title}</strong> (${ROLES[p.role].team})`).join('<br>');
+
+          AudioEngine.speak(message, { isNarrator: true });
+          modal.classList.add('open');
+        },
+
+        openTargetModal(title, desc, targets, onPick) {
+          const modal = document.getElementById('modal-target');
+          document.getElementById('target-modal-title').textContent = title;
+          document.getElementById('target-modal-desc').textContent = desc;
+          const list = document.getElementById('target-modal-list');
+          list.innerHTML = '';
+          targets.forEach(t => {
+            const btn = document.createElement('button');
+            btn.className = 'target-btn';
+            btn.innerHTML = `<span>${t.name}</span><small>${t.shielded ? '🛡️ محمي بدرع' : `${t.hand.length} أوراق`}</small>`;
+            btn.onclick = () => {
+              modal.classList.remove('open');
+              onPick(t);
+            };
+            list.appendChild(btn);
+          });
+          modal.classList.add('open');
+        },
+
+        addLog(text) {
+          this.discussionLogs.push(text);
+          if (this.discussionLogs.length > 25) this.discussionLogs.shift();
+        },
+
+        /* ================= RENDERING ================= */
+        renderAll() {
+          this.renderBotHands();
+          this.renderCenterTable();
+          this.renderPlayerHand();
+          this.updateHUD();
+        },
+
+        renderBotHands(thinkingBotId = null) {
+          const container = document.getElementById('bot-hands');
+          container.innerHTML = '';
+          const bots = this.players.filter(p => !p.isHuman);
+          bots.forEach(bot => {
+            const isTurn = this.players[this.currentTurnIdx]?.id === bot.id && this.phase === 'playing';
+            const seat = document.createElement('div');
+            seat.className = `bot-seat ${isTurn ? 'current-turn' : ''} ${bot.eliminated ? 'eliminated' : ''}`;
+
+            let statusClass = '';
+            let statusText = 'ينتظر';
+            if (bot.eliminated) {
+              statusText = 'مُقصى';
+            } else if (thinkingBotId === bot.id || isTurn) {
+              statusClass = 'thinking';
+              statusText = 'يفكر الآن...';
+            } else if (bot.shielded) {
+              statusClass = 'shielded';
+              statusText = '🛡️ محمي';
+            }
+
+            const backsCount = Math.min(bot.hand.length, 7);
+            let miniBacks = '';
+            for (let i = 0; i < backsCount; i++) {
+              miniBacks += `<div class="mini-card-back">★</div>`;
+            }
+
+            seat.innerHTML = `
+              <div class="bot-header">
+                <div class="bot-identity">
+                  <div class="bot-avatar">${bot.avatar}</div>
+                  <span class="bot-name">${bot.name}</span>
+                </div>
+                <span class="bot-status ${statusClass}">${statusText}</span>
+              </div>
+              <div class="bot-cards-fan">
+                <div class="mini-backs">${miniBacks}</div>
+                <span class="bot-card-count">${bot.hand.length} بطاقات</span>
+              </div>
+              <div class="bot-speech-bubble" id="bot-bubble-${bot.id}"></div>
+            `;
+            container.appendChild(seat);
+          });
+        },
+
+        renderCenterTable() {
+          document.getElementById('deck-count').textContent = String(this.deck.length);
+          const slot = document.getElementById('top-discard-slot');
+          slot.innerHTML = '';
+          const top = this.discardPile[this.discardPile.length - 1];
+          if (top) {
+            slot.appendChild(this.createCardElement(top, false));
+          }
+        },
+
+        renderPlayerHand() {
+          const human = this.players[0];
+          const rInfo = ROLES[human.role];
+          document.getElementById('player-role-name').textContent = `${rInfo.title} (${rInfo.team})`;
+          document.getElementById('player-shield-tag').style.display = human.shielded ? 'inline' : 'none';
+
+          const cardsEl = document.getElementById('player-cards');
+          cardsEl.innerHTML = '';
+
+          human.hand.forEach(card => {
+            const el = this.createCardElement(card, true);
+            if (card.id === this.selectedCardId) el.classList.add('selected');
+            if (this.currentTurnIdx === 0 && this.isCardPlayable(card)) el.classList.add('playable');
+
+            el.addEventListener('click', () => this.selectCard(card.id));
+            el.addEventListener('dblclick', () => {
+              this.selectedCardId = card.id;
+              this.playSelectedHumanCard();
+            });
+
+            // Drag-and-drop support
+            el.setAttribute('draggable', 'true');
+            el.addEventListener('dragstart', (e) => {
+              this.selectedCardId = card.id;
+              e.dataTransfer.setData('text/plain', card.id);
+            });
+
+            cardsEl.appendChild(el);
+          });
+
+          const btnPlay = document.getElementById('btn-card');
+          const selCard = human.hand.find(c => c.id === this.selectedCardId);
+          btnPlay.disabled = !(this.currentTurnIdx === 0 && this.phase === 'playing' && selCard && this.isCardPlayable(selCard));
+        },
+
+        createCardElement(card, interactive) {
+          const div = document.createElement('div');
+          div.className = `game-card suit-${card.suit} ${card.type !== 'normal' ? 'special-card' : ''}`;
+          const badgeLabel = card.type === 'normal' ? card.value : (card.type === 'attack' ? '+2' : (card.type === 'reveal' ? 'عين' : (card.type === 'swap' ? 'تبديل' : 'درع')));
+
+          div.innerHTML = `
+            <div class="card-top">
+              <span class="card-suit-pill">${SUITS[card.suit].name}</span>
+              <span>${badgeLabel}</span>
+            </div>
+            <div class="card-art">${getCardSVG(card)}</div>
+            <div class="card-title">${card.title}</div>
+          `;
+          if (!interactive) div.style.cursor = 'default';
+          return div;
+        },
+
+        updateHUD() {
+          const phaseMap = {
+            dealing: 'مرحلة التوزيع',
+            playing: 'لعب البطاقات',
+            discussion: 'النقاش والتصويت',
+            ended: 'انتهت الجولة'
+          };
+          const diffMap = { easy: 'سهل', medium: 'متوسط', hard: 'صعب' };
+          document.getElementById('hud-phase').textContent = phaseMap[this.phase] || '—';
+          document.getElementById('hud-turn').textContent = this.players[this.currentTurnIdx]?.name || '—';
+          document.getElementById('hud-discuss-counter').textContent = `${this.turnsUntilDiscussion} أدوار`;
+          document.getElementById('hud-diff').textContent = diffMap[this.difficulty];
+        }
+      };
+
+      /* ===========================================================
+         5. UI EVENT WIRING & NAVIGATION
+         =========================================================== */
+      const screenHome = document.getElementById('screen-home');
+      const screenGame = document.getElementById('screen-game');
+
+      function switchScreen(toGame) {
+        if (toGame) {
+          screenHome.classList.remove('active');
+          screenGame.classList.add('active');
+        } else {
+          screenGame.classList.remove('active');
+          screenHome.classList.add('active');
+        }
+      }
+
+      // Difficulty buttons
+      document.querySelectorAll('.diff-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          Game.difficulty = btn.dataset.diff;
+          const labels = { easy: 'سهل', medium: 'متوسط', hard: 'صعب' };
+          document.getElementById('diff-label-val').textContent = labels[Game.difficulty];
+          AudioEngine.sfxCard();
+        });
+      });
+
+      // Start game
+      document.getElementById('btn-start-game').addEventListener('click', () => {
+        AudioEngine.initCtx();
+        switchScreen(true);
+        Game.startNewGame();
+      });
+
+      document.getElementById('btn-back-home').addEventListener('click', () => {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        Game.phase = 'idle';
+        switchScreen(false);
+      });
+
+      // Play selected card button (#btn-card) & Draw pile & Drag-drop
+      document.getElementById('btn-card').addEventListener('click', () => Game.playSelectedHumanCard());
+      document.getElementById('draw-pile').addEventListener('click', () => Game.humanDrawCard());
+
+      const dropzone = document.getElementById('discard-dropzone');
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('drag-over');
+      });
+      dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('drag-over');
+        const cardId = e.dataTransfer.getData('text/plain');
+        if (cardId) {
+          Game.selectedCardId = cardId;
+          Game.playSelectedHumanCard();
+        }
+      });
+
+      // Role badge click preview
+      document.getElementById('player-role-badge').addEventListener('click', () => {
+        const human = Game.players[0];
+        if (!human) return;
+        const r = ROLES[human.role];
+        showToast(`🎭 دورك: ${r.title} — ${r.desc}`);
+      });
+
+      // Modals
+      const openModal = (id) => document.getElementById(id).classList.add('open');
+      document.getElementById('btn-open-guide').addEventListener('click', () => openModal('modal-guide'));
+      document.getElementById('btn-game-guide').addEventListener('click', () => openModal('modal-guide'));
+      document.getElementById('btn-open-settings').addEventListener('click', () => openModal('modal-settings'));
+      document.getElementById('btn-open-about').addEventListener('click', () => openModal('modal-about'));
+
+      document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById(btn.dataset.close).classList.remove('open');
+        });
+      });
+
+      // End game result buttons
+      document.getElementById('btn-play-again').addEventListener('click', () => {
+        document.getElementById('modal-result').classList.remove('open');
+        Game.startNewGame();
+      });
+      document.getElementById('btn-result-home').addEventListener('click', () => {
+        document.getElementById('modal-result').classList.remove('open');
+        switchScreen(false);
+      });
+
+      // Settings Controls
+      document.getElementById('opt-voice').addEventListener('change', (e) => {
+        AudioEngine.voiceEnabled = e.target.checked;
+        updateSpeakerBtn();
+      });
+      document.getElementById('opt-sfx').addEventListener('change', (e) => {
+        AudioEngine.sfxEnabled = e.target.checked;
+      });
+      document.getElementById('opt-rate').addEventListener('input', (e) => {
+        AudioEngine.rate = parseFloat(e.target.value);
+      });
+      document.getElementById('btn-test-voice').addEventListener('click', () => {
+        AudioEngine.speak('مرحلة التوزيع، انظروا لأوراقكم. أهلاً بكم في خلية الجبل!', { isNarrator: true });
+      });
+
+      // Voice Bar Buttons (#voice-chat-bar)
+      const speakerBtn = document.getElementById('btn-speaker-toggle');
+      function updateSpeakerBtn() {
+        speakerBtn.classList.toggle('active', AudioEngine.voiceEnabled);
+        speakerBtn.classList.toggle('muted', !AudioEngine.voiceEnabled);
+        speakerBtn.innerHTML = AudioEngine.voiceEnabled
+          ? '🔊 <span class="hide-sm">الصوت</span>'
+          : '🔇 <span class="hide-sm">صامت</span>';
+      }
+      speakerBtn.addEventListener('click', () => {
+        AudioEngine.voiceEnabled = !AudioEngine.voiceEnabled;
+        document.getElementById('opt-voice').checked = AudioEngine.voiceEnabled;
+        if (!AudioEngine.voiceEnabled && 'speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+        updateSpeakerBtn();
+        showToast(AudioEngine.voiceEnabled ? '🔊 تم تفعيل صوت الراوي والروبوتات' : '🔇 تم كتم الصوت');
+      });
+
+      const micBtn = document.getElementById('btn-mic-toggle');
+      micBtn.addEventListener('click', async () => {
+        AudioEngine.micActive = !AudioEngine.micActive;
+        if (AudioEngine.micActive) {
+          micBtn.classList.add('active');
+          micBtn.innerHTML = '🎙️ <span class="hide-sm">متصل</span>';
+          // Try SpeechRecognition / mic permission gracefully
+          const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (SR) {
+            try {
+              const rec = new SR();
+              rec.lang = 'ar-DZ';
+              rec.interimResults = false;
+              rec.onresult = (ev) => {
+                const said = ev.results[0][0].transcript;
+                showToast(`🎙️ قلت: "${said}"`);
+                Game.addLog(`🎙️ القائد: "${said}"`);
+              };
+              rec.onerror = () => {};
+              rec.start();
+              AudioEngine.recognition = rec;
+            } catch (_) {}
+          }
+          showToast('🎙️ الميكروفون مفعّل لغرفة النقاش الصوتي.');
+        } else {
+          micBtn.classList.remove('active');
+          micBtn.innerHTML = '🎙️ <span class="hide-sm">الميكروفون</span>';
+          if (AudioEngine.recognition) {
+            try { AudioEngine.recognition.stop(); } catch (_) {}
+          }
+          showToast('🎙️ تم إيقاف الميكروفون.');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
